@@ -117,16 +117,24 @@ const uint64_t P2P_DEFAULT_INVOKE_TIMEOUT                    = 60 * 2 * 1000; //
 const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          // 5 seconds
 const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "8f80f9a5a434a9f1510d13336228debfee9c918ce505efe225d8c94d045fa115";
 
-const char* const SEED_NODES[] = { "52.21.253.162:32347", "46.149.182.151:32347" };
-
+const char* const SEED_NODES[] = { 
+  "136.243.158.27:32347",
+  "95.46.98.64:32347",
+  "52.21.253.162:32347",
+  "46.149.182.151:32347" 
+};
 
 struct CheckpointData {
   uint32_t height;
   const char* blockId;
 };
 
-const std::initializer_list<CheckpointData> CHECKPOINTS = { {3436, "fa0348c379f63af68304f9f256ea99cc8560eda5a25740dc7ff94631fc7fcf5d"}
- };
+const std::initializer_list<CheckpointData> CHECKPOINTS = { 
+  {3436,	"fa0348c379f63af68304f9f256ea99cc8560eda5a25740dc7ff94631fc7fcf5d" },
+  {16970,	"456e43e923a02516559d89f567c3fa2068051a9fdac562a937eeaaaf3e9aab46" },
+  {30000,	"4d9762f83ebebb462f1787862aa001e954dadafd203d2fdb973e4b2e52891cf4" },
+  {47000,	"2752a18c7d3a70d22d4798eeb979079f3e1e8b1ddc8de39309d8c5ce2332e9c8" }
+};
 
 } // CryptoNote
 
