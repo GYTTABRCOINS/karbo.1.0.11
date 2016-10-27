@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2016, The Karbowanec developers
 //
 // This file is part of Bytecoin.
 //
@@ -140,11 +141,16 @@ uint32_t Currency::upgradeHeight(uint8_t majorVersion) const {
 
 bool Currency::getBlockReward(uint8_t blockMajorVersion, size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins,
   uint64_t fee, uint64_t& reward, int64_t& emissionChange) const {
-  assert(alreadyGeneratedCoins <= m_moneySupply);
+// assert(alreadyGeneratedCoins <= m_moneySupply);
   assert(m_emissionSpeedFactor > 0 && m_emissionSpeedFactor <= 8 * sizeof(uint64_t));
 
   uint64_t baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
-
+  // Tail emission - after reward reaches 1 KRB it will stay at that level
+  if (baseReward < CryptoNote::parameters::TAIL_EMISSION_REWARD)
+    {
+	  baseReward = CryptoNote::parameters::TAIL_EMISSION_REWARD;
+    }
+  
   size_t blockGrantedFullRewardZone = blockGrantedFullRewardZoneByBlockVersion(blockMajorVersion);
   medianSize = std::max(medianSize, blockGrantedFullRewardZone);
   if (currentBlockSize > UINT64_C(2) * medianSize) {
@@ -546,7 +552,7 @@ CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log) : m_currency(log) {
 
   moneySupply(parameters::MONEY_SUPPLY);
   emissionSpeedFactor(parameters::EMISSION_SPEED_FACTOR);
-cryptonoteCoinVersion(parameters::CRYPTONOTE_COIN_VERSION);
+  cryptonoteCoinVersion(parameters::CRYPTONOTE_COIN_VERSION);
 
   rewardBlocksWindow(parameters::CRYPTONOTE_REWARD_BLOCKS_WINDOW);
   blockGrantedFullRewardZone(parameters::CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE);
