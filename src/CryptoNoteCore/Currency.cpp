@@ -409,7 +409,7 @@ namespace CryptoNote {
 
 		if (blockMajorVersion >= BLOCK_MAJOR_VERSION_2) {
 
-			// default CN with smaller window DIFFICULTY_WINDOW_V2 and DIFFICULTY_CUT_V2
+			// default CN with smaller window DIFFICULTY_WINDOW_V2
 
 			size_t m_difficultyWindow_2 = CryptoNote::parameters::DIFFICULTY_WINDOW_V2;
 			size_t m_difficultyCut_2 = CryptoNote::parameters::DIFFICULTY_CUT_V2;
@@ -428,7 +428,7 @@ namespace CryptoNote {
 				return 1;
 			}
 
-			sort(timestamps.begin(), timestamps.end()); // important for calc 2 too!
+			sort(timestamps.begin(), timestamps.end());
 
 			// without difficulty cut it gives basically the same as Zawy's formula below, LOL
 			
@@ -458,8 +458,8 @@ namespace CryptoNote {
 			// next Diff = Avg past N Diff * TargetInterval / Avg past N solve times
 
 			// this gives the same results as modified CN version without cut
-
-			sort(timestamps.begin(), timestamps.end()); // important for calc 2 too!
+/*
+			sort(timestamps.begin(), timestamps.end());
 			sort(cumulativeDifficulties.begin(), cumulativeDifficulties.end()); // just in case
 			uint64_t avgWindowDiff = (cumulativeDifficulties.back() - cumulativeDifficulties.front()) / cumulativeDifficulties.size();
 			uint64_t avgSolveTime = (timestamps.back() - timestamps.front()) / timestamps.size();
@@ -467,16 +467,12 @@ namespace CryptoNote {
 			if (nextDiffZ == 0) {
 				nextDiffZ = 1;
 			}
-								
-			logger(INFO, GREEN) << "Avg past N Diff 2: " << avgWindowDiff;
-			logger(INFO, GREEN) << "Avg past N solve time 2: " << avgSolveTime;
-			logger(INFO, BRIGHT_GREEN) << "Next diff 2: " << nextDiffZ;
-
+*/
 			//	return nextDiffZ;
 
 			// end of new difficulty calculation
 
-			return (low + timeSpan - 1) / timeSpan;
+			return nextDiffAlt;
 
 		} else {
 
