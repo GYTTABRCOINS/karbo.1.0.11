@@ -410,10 +410,9 @@ namespace CryptoNote {
 		if (blockMajorVersion >= BLOCK_MAJOR_VERSION_2) {
 
 			// default CN with smaller window DIFFICULTY_WINDOW_V2
+			// and without DIFFICULTY_CUT it gives very similar results as the Zawy's formula below
 
 			size_t m_difficultyWindow_2 = CryptoNote::parameters::DIFFICULTY_WINDOW_V2;
-			size_t m_difficultyCut_2 = CryptoNote::parameters::DIFFICULTY_CUT_V2;
-
 			assert(m_difficultyWindow_2 >= 2);
 
 			if (timestamps.size() > m_difficultyWindow_2) {
@@ -430,17 +429,12 @@ namespace CryptoNote {
 
 			sort(timestamps.begin(), timestamps.end());
 
-			// without difficulty cut it gives basically the same as Zawy's formula below, LOL
-			
-			size_t cutBegin, cutEnd;
-			cutBegin = 0;
-			cutEnd = length;
-			uint64_t timeSpan = timestamps[cutEnd - 1] - timestamps[cutBegin];
+			uint64_t timeSpan = timestamps[length - 1] - timestamps[0];
 			if (timeSpan == 0) {
 				timeSpan = 1;
 			}
 
-			difficulty_type totalWork = cumulativeDifficulties[cutEnd - 1] - cumulativeDifficulties[cutBegin];
+			difficulty_type totalWork = cumulativeDifficulties[length - 1] - cumulativeDifficulties[0];
 			assert(totalWork > 0);
 
 			uint64_t low, high;
@@ -451,28 +445,24 @@ namespace CryptoNote {
 
 			uint64_t nextDiffAlt = (low + timeSpan - 1) / timeSpan;
 
-			logger(INFO, BRIGHT_GREEN) << "Default calc next diff alt: " << nextDiffAlt;
-	
-
-			// new Zawy difficulty algorithm v1.0
+			// Zawy difficulty algorithm v1.0
 			// next Diff = Avg past N Diff * TargetInterval / Avg past N solve times
 
 			// this gives the same results as modified CN version without cut
-/*
+			/*
 			sort(timestamps.begin(), timestamps.end());
-			sort(cumulativeDifficulties.begin(), cumulativeDifficulties.end()); // just in case
 			uint64_t avgWindowDiff = (cumulativeDifficulties.back() - cumulativeDifficulties.front()) / cumulativeDifficulties.size();
 			uint64_t avgSolveTime = (timestamps.back() - timestamps.front()) / timestamps.size();
 			uint64_t nextDiffZ = avgWindowDiff * m_difficultyTarget / avgSolveTime;
 			if (nextDiffZ == 0) {
-				nextDiffZ = 1;
+			nextDiffZ = 1;
 			}
-*/
-			//	return nextDiffZ;
+			*/
+			
+		//	return nextDiffZ;
+			return nextDiffAlt;
 
 			// end of new difficulty calculation
-
-			return nextDiffAlt;
 
 		} else {
 
