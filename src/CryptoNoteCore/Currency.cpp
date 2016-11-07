@@ -410,7 +410,7 @@ namespace CryptoNote {
 		if (blockMajorVersion >= BLOCK_MAJOR_VERSION_2) {
 
 			// default CN with smaller window DIFFICULTY_WINDOW_V2
-			// and without DIFFICULTY_CUT it gives very similar results as the Zawy's formula below
+			// without DIFFICULTY_CUT it gives very similar results to the Zawy's formula below
 
 			size_t m_difficultyWindow_2 = CryptoNote::parameters::DIFFICULTY_WINDOW_V2;
 			assert(m_difficultyWindow_2 >= 2);
@@ -429,7 +429,7 @@ namespace CryptoNote {
 
 			sort(timestamps.begin(), timestamps.end());
 
-			uint64_t timeSpan = timestamps[length - 1] - timestamps[0];
+		/*	uint64_t timeSpan = timestamps[length - 1] - timestamps[0];
 			if (timeSpan == 0) {
 				timeSpan = 1;
 			}
@@ -441,26 +441,25 @@ namespace CryptoNote {
 			low = mul128(totalWork, m_difficultyTarget, &high);
 			if (high != 0 || low + timeSpan - 1 < low) {
 				return 0;
-			}
+			} 
 
-			uint64_t nextDiffAlt = (low + timeSpan - 1) / timeSpan;
+			uint64_t nextDiffAlt = (low + timeSpan - 1) / timeSpan; */
+		//	return nextDiffAlt;
 
 			// Zawy difficulty algorithm v1.0
 			// next Diff = Avg past N Diff * TargetInterval / Avg past N solve times
+			// this gives almost same results as modified CN version without cut above
 
-			// this gives the same results as modified CN version without cut
-			/*
-			sort(timestamps.begin(), timestamps.end());
 			uint64_t avgWindowDiff = (cumulativeDifficulties.back() - cumulativeDifficulties.front()) / cumulativeDifficulties.size();
 			uint64_t avgSolveTime = (timestamps.back() - timestamps.front()) / timestamps.size();
 			uint64_t nextDiffZ = avgWindowDiff * m_difficultyTarget / avgSolveTime;
-			if (nextDiffZ == 0) {
-			nextDiffZ = 1;
+
+			if (nextDiffZ <= 100000) {
+			nextDiffZ = 100000;
 			}
-			*/
 			
-		//	return nextDiffZ;
-			return nextDiffAlt;
+			return nextDiffZ;
+		
 
 			// end of new difficulty calculation
 
